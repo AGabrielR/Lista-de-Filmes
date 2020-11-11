@@ -19,4 +19,14 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [App\Http\Controllers\ProfileController::class, 'index'])->name('home')->middleware('auth');;
+
+Route::get('/profile/create',[App\Http\Controllers\ProfileController::class, 'create'])->name('profile.create')->middleware('auth');;
+
+Route::post('/profile',[App\Http\Controllers\ProfileController::class, 'store'])->name('profile.store')->middleware('auth');;
+
+Route::get('/profile/edit/{id}',[App\Http\Controllers\ProfileController::class, 'edit'])->name('profile.edit')->middleware('auth');;
+
+Route::put('/profile/update/{id}','ProfileController@update')->name('profile.update')->middleware('auth');;
+
+Route::delete('/profile/destroy/{id}','ProfileController@destroy')->name('profile.destroy')->middleware('auth');;
