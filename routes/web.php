@@ -13,15 +13,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [App\Http\Controllers\MoviesController::class, 'index'])->name('movies.index');
+
+Route::get('/movies/{movie}', [App\Http\Controllers\MoviesController::class, 'show'])->name('movies.show');
 
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\ProfileController::class, 'index'])->name('home')->middleware('auth');;
 
 Route::get('/profile/create',[App\Http\Controllers\ProfileController::class, 'create'])->name('profile.create')->middleware('auth');;
+
+Route::post('/profile/{id}',[App\Http\Controllers\ProfileController::class, 'accessProfile'])->name('profile.access')->middleware('auth');;
 
 Route::post('/profile',[App\Http\Controllers\ProfileController::class, 'store'])->name('profile.store')->middleware('auth');;
 

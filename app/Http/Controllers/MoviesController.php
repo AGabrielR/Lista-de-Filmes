@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
-use App\Models\Profile;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 
-class ProfileController extends Controller
+class MoviesController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,10 +14,25 @@ class ProfileController extends Controller
      */
     public function index()
     {
-        $profiles = DB::table('profiles')->where('user_id', Auth::user()->id);
-        $profiles = $profiles->get();
-        return view('profile.index')->with('profiles',$profiles);
-    }
+        $popularMovies = Http::withToken(config('services.tmdb.token'))
+            ->get('https://api.themoviedb.org/3/movie/popular')
+            ->json(['results']);
+        
+        $genresArray = Http::withToken(config('services.tmdb.token'))
+            ->get('https://api.themoviedb.org/3/genre/movie/list')
+            ->json(['genres']);
+
+        $genres = collect($genresArray)->mapWithKeys(function ($genre){
+            return [$genre['id'] => $genre['name']];
+        });
+
+        dump($genres);
+
+        return view('index', [
+            'popularMovies' => $popularMovies,
+            'genres' => $genres,
+        ]);
+    }   
 
     /**
      * Show the form for creating a new resource.
@@ -28,7 +41,7 @@ class ProfileController extends Controller
      */
     public function create()
     {
-        return view ('profile.create');
+        //
     }
 
     /**
@@ -39,22 +52,7 @@ class ProfileController extends Controller
      */
     public function store(Request $request)
     {
-        $aux = DB::table('profiles')
-            ->select(DB::raw('count(*) as quantidade'))
-            ->where('user_id', '=', Auth::user()->id)
-            ->get();
-            $id = Auth::user()->id;
-            // foreach ($aux as $qtd => $id){
-            //     $id->quantidade;
-            // }
-        if(($aux[0]->quantidade) < 4){
-            $profile = $request->all();
-            $profile['user_id'] = Auth::user()->id;
-
-            profile::create($profile);
-        }
-
-        return redirect()->route('home');
+        //
     }
 
     /**
@@ -66,12 +64,6 @@ class ProfileController extends Controller
     public function show($id)
     {
         //
-    }
-
-    public function accessProfile(Request $request, $id){
-        $request->session()->put('profile_id', $id);
-        
-        return redirect()->route('home');
     }
 
     /**
