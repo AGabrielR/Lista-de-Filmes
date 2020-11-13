@@ -1,11 +1,11 @@
 @extends('layouts.app')
     @section('content')
         <div class="container">
-            <div class="popular-movies">
-                <h2 class="uppercase trackindwider text-orange-500 text-lg font-semibold">Popular Movies</h2>
+            <div class="searched-movies">
+                <h2 class="uppercase trackindwider text-orange-500 text-lg font-semibold">Filmes Encontrados</h2>
                 <br>
                 <div class="row">
-                    @foreach($popularMovies as $movie)
+                    @foreach($searchResults as $movie)
                         <div class="col-md-3 mb-4">
                             <a href="#">
                                 <img src="{{'https://image.tmdb.org/t/p/w500/'.$movie['poster_path']}}" alt="" class="offset-md-1 col-md-11 img-fluid">

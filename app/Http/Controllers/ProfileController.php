@@ -18,7 +18,7 @@ class ProfileController extends Controller
     {
         $profiles = DB::table('profiles')->where('user_id', Auth::user()->id);
         $profiles = $profiles->get();
-        return view('profile.index')->with('profiles',$profiles);
+        return view('profile.change')->with('profiles',$profiles);
     }
 
     /**
@@ -54,7 +54,7 @@ class ProfileController extends Controller
             profile::create($profile);
         }
 
-        return redirect()->route('home');
+        return redirect()->route('profile.change');
     }
 
     /**
@@ -69,9 +69,13 @@ class ProfileController extends Controller
     }
 
     public function accessProfile(Request $request, $id){
+        session()->forget('error');
         $request->session()->put('profile_id', $id);
         
-        return redirect()->route('home');
+        $profile_name = Profile::find($id);
+        $request->session()->put('profile_name', $profile_name["nome"]);
+
+        return redirect()->route('profile.change');
     }
 
     /**
@@ -82,7 +86,7 @@ class ProfileController extends Controller
      */
     public function edit($id)
     {
-        //
+        session()->forget('error');
     }
 
     /**
@@ -94,7 +98,7 @@ class ProfileController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        session()->forget('error');
     }
 
     /**
@@ -104,7 +108,16 @@ class ProfileController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
-    {
-        //
+    {   
+        session()->forget('error');
+        if($id==session()->get('profile_id', [1])){
+            session()->put('error', "Erro, acesse por outro perfil para remover");
+        }else{
+            $profile = Profile::findOrFail ($id);
+            $profile->delete();
+        }
+        return redirect()->route('profile.change');
+        
+
     }
 }

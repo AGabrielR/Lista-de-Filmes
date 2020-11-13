@@ -26,13 +26,31 @@ class MoviesController extends Controller
             return [$genre['id'] => $genre['name']];
         });
 
-        dump($genres);
-
         return view('index', [
             'popularMovies' => $popularMovies,
             'genres' => $genres,
         ]);
     }   
+
+    public function find(Request $search){
+
+        $searchResults = Http::withToken(config('services.tmdb.token'))
+            ->get('https://api.themoviedb.org/3/search/movie?api_key={eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3NzliYzcwMDg4NzM2MDljNDM1ZGQzMmEzMmFiMWJiYSIsInN1YiI6IjVmYWQ3MjgwZGExMGYwMDA0MGQ1MmFmNCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.ZzCx7Wny6o6HM0VvWZWcP3vpCAhL999bY-_eTZH96zs}&query='.$search['search'])
+            ->json(['results']);
+        
+            $genresArray = Http::withToken(config('services.tmdb.token'))
+            ->get('https://api.themoviedb.org/3/genre/movie/list')
+            ->json(['genres']);
+
+        $genres = collect($genresArray)->mapWithKeys(function ($genre){
+            return [$genre['id'] => $genre['name']];
+        });
+
+            return view('movies.find', [
+                'searchResults' => $searchResults,
+                'genres' => $genres,
+            ]);
+    }
 
     /**
      * Show the form for creating a new resource.

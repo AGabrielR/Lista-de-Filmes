@@ -5,8 +5,13 @@
 
         @if(session()->has('profile_id'))
             <div class="offset-md-3 col-md-5">
-                Você está logado no perfil {{session()->get('profile_id', [1])}}
+                Você está logado no perfil {{session()->get('profile_name', [1])}}
             </div>
+        @endif
+        @if(session()->has('error'))
+            <span class="offset-md-2">
+                {{session()->get('error')}}
+            </span>
         @endif
         <div class="offset-md-8 col-md-2">
             <a href="{{route('profile.create')}}" class="btn btn-block btn-outline-primary">

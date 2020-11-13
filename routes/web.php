@@ -15,11 +15,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [App\Http\Controllers\MoviesController::class, 'index'])->name('movies.index');
 
-Route::get('/movies/{movie}', [App\Http\Controllers\MoviesController::class, 'show'])->name('movies.show');
+Route::post('/movies', [App\Http\Controllers\MoviesController::class, 'find'])->name('movies.find');
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\ProfileController::class, 'index'])->name('home')->middleware('auth');;
+Route::get('/profile/change', [App\Http\Controllers\ProfileController::class, 'index'])->name('profile.change')->middleware('auth');;
 
 Route::get('/profile/create',[App\Http\Controllers\ProfileController::class, 'create'])->name('profile.create')->middleware('auth');;
 
@@ -31,4 +31,4 @@ Route::get('/profile/edit/{id}',[App\Http\Controllers\ProfileController::class, 
 
 Route::put('/profile/update/{id}','ProfileController@update')->name('profile.update')->middleware('auth');;
 
-Route::delete('/profile/destroy/{id}','ProfileController@destroy')->name('profile.destroy')->middleware('auth');;
+Route::delete('/profile/destroy/{id}',[App\Http\Controllers\ProfileController::class, 'destroy'])->name('profile.destroy')->middleware('auth');;
