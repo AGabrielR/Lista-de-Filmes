@@ -36,7 +36,7 @@
                 @guest @else
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-link">
-                            <a href="">Minha Lista</a>
+                            <a href="{{route('list.movies')}}">Minha Lista</a>
                         </li>
                         <li class="nav-link">
                             <a href="">Já assistidos</a>
@@ -66,9 +66,15 @@
                             @endif
                         @else
                             <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    Perfil: {{ session()->get('profile_name', [1]) }}
+                                @if(session()->has('profile_name'))
+                                    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                        Perfil: {{ session()->get('profile_name', [1]) }}
+                                    </a>
+                                @else
+                                <a href="#" id="navbarDropdown" class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                    Acesse um perfil
                                 </a>
+                                @endif
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item text-center" href="{{ route('profile.change')}}">Mudar Perfil</a>

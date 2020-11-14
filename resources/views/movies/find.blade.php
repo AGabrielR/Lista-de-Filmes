@@ -1,6 +1,11 @@
 @extends('layouts.app')
     @section('content')
         <div class="container">
+            @if(!isset($searchResults))
+                <div class="searched-movies">
+                    <h2>Nenhum filme encontrado</h2>
+                </div>
+            @else
             <div class="searched-movies">
                 <h2 class="uppercase trackindwider text-orange-500 text-lg font-semibold">Filmes Encontrados</h2>
                 <br>
@@ -18,20 +23,25 @@
                                     </svg>
                                     <span>{{$movie['vote_average'] * 10 .'%'}}</span>
                                     <span>|</span>
-                                    <span>{{ \Carbon\Carbon::parse($movie['release_date'])->format('d M, y')}}</span>
+                                    @if(isset($movie['release_date']))
+                                        <span>{{ \Carbon\Carbon::parse($movie['release_date'])->format('d M, y')}}</span>
+                                    @endif
                                 </div>
                                 <div>
                                     @foreach($movie['genre_ids'] as $genre)
                                         {{ $genres->get($genre) }}@if (!$loop->last), @endif
                                     @endforeach
                                 </div>
-                                <form action="">
+                                <form action="{{route('list.store')}}">
+                                    <input type="hidden" name="id" value="{{$movie['id']}}">
                                     <button type="submit" class="btn btn-primary">+ Lista</button>
                                 </form>
                             </div>
                         </div>
                     @endforeach
+        
                 </div>
             </div>
+            @endif
         </div>
     @endsection

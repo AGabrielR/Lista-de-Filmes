@@ -69,11 +69,6 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
-        Profile::create([
-            'nomePerfil' => $data['name'],
-            'onlyView' => false,
-            'user_id' => Auth::user()->id
-        ]);
 
     }
 }
