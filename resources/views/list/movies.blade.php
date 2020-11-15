@@ -32,11 +32,13 @@
                                         @endforeach
                                     @endfor
                                 </div>
+                                <br>
                                 <form action="{{route('add.watched')}}" method="POST">
                                     @csrf
                                     <input type="hidden" name="id" value="{{$movie['id']}}" name="movie_id">
                                     <button type="submit" class="btn btn-primary">+ Assistido</button>
                                 </form>
+                                <br><br>
                             </div>
                         </div>
                     @endforeach

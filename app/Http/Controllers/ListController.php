@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use App\Models\Profile;
 use App\Models\moviesList;
+use App\Models\moviesCat;
 
 class ListController extends Controller
 {
@@ -39,30 +40,58 @@ class ListController extends Controller
     public function store(Request $request)
     {  
         if(null !== (session()->get('profile_id'))){
-            $movie_id = $request->only(['id']);
+            if([] !== $request->only(['id'])){
+                $movie_id = $request->only(['id']);
+            }else{
+                $movie_id = $request->only(['movie_id']);
+            }
+           
+            // dd($movie_id['movie_id']);
             
             // dd(session()->get('profile_id'));
-
-            $aux = DB::table('movies_lists')
-                ->select(DB::raw('movie_id'))
-                ->where(
-                    [
-                        ['profile_id', '=', session()->get('profile_id')], 
-                        ['movie_id', '=', $movie_id['id']],
-                    ])
-                ->get();
-            
+            if(isset($movie_id['movie_id'])){
+                $aux = DB::table('movies_lists')
+                    ->select(DB::raw('movie_id'))
+                    ->where(
+                        [
+                            ['profile_id', '=', session()->get('profile_id')], 
+                            ['movie_id', '=', $movie_id['movie_id']],
+                        ])
+                    ->get();
+            }else{
+                $aux = DB::table('movies_lists')
+                    ->select(DB::raw('movie_id'))
+                    ->where(
+                        [
+                            ['profile_id', '=', session()->get('profile_id')], 
+                            ['movie_id', '=', $movie_id['id']],
+                        ])
+                    ->get();
+            }
             
             if($aux!==[]){
+                if(isset($movie_id['id'])){
+                    $movies_list['movie_id'] = $movie_id['id'];
+                }else{
+                    $movies_list['movie_id'] = $movie_id['movie_id'];
+                }
                 
-                $movies_list['movie_id'] = $movie_id['id'];
                 $movies_list['profile_id'] = session()->get('profile_id', [1]);
                 $movies_list['watched'] = false;
+                
+                $genresArray = Http::withToken(config('services.tmdb.token'))
+                ->get('api.themoviedb.org/3/movie/'.$movies_list['movie_id'].'?api_key=779bc7008873609c435dd32a32ab1bba&language=en-US')
+                ->json('genres');
+
+                foreach ($genresArray as $genre) {
+                    $movies_cat['cat_id'] = $genre['id'];
+                    $movies_cat['profile_id'] = session()->get('profile_id', [1]);
+
+                    moviesCat::create($movies_cat);
+                }
 
             moviesList::create($movies_list);
             }
-
-            
 
             return redirect()->route('movies.index');
         }else{
@@ -91,13 +120,12 @@ class ListController extends Controller
 
             foreach ($aux as $movie) {
                 $listMovies[] = Http::withToken(config('services.tmdb.token'))
-                    ->get('api.themoviedb.org/3/movie/'.$movie->movie_id.'?api_key=779bc7008873609c435dd32a32ab1bba&language=en-US')
+                    ->get('api.themoviedb.org/3/movie/'.$movie->movie_id.'?api_key=779bc7008873609c435dd32a32ab1bba&language=pt-BR')
                     ->json();
             }
 
-            // dd($listMovies);        
             $genresArray = Http::withToken(config('services.tmdb.token'))
-                ->get('https://api.themoviedb.org/3/genre/movie/list')
+                ->get('https://api.themoviedb.org/3/genre/movie/list?api_key=779bc7008873609c435dd32a32ab1bba&language=pt-BR')
                 ->json(['genres']);
 
             $genres = collect($genresArray)->mapWithKeys(function ($genre){
@@ -134,13 +162,13 @@ class ListController extends Controller
 
             foreach ($aux as $movie) {
                 $listMovies[] = Http::withToken(config('services.tmdb.token'))
-                    ->get('api.themoviedb.org/3/movie/'.$movie->movie_id.'?api_key=779bc7008873609c435dd32a32ab1bba&language=en-US')
+                    ->get('api.themoviedb.org/3/movie/'.$movie->movie_id.'?api_key=779bc7008873609c435dd32a32ab1bba&language=pt-BR')
                     ->json();
             }
 
             // dd($listMovies);        
             $genresArray = Http::withToken(config('services.tmdb.token'))
-                ->get('https://api.themoviedb.org/3/genre/movie/list')
+                ->get('https://api.themoviedb.org/3/genre/movie/list?api_key=779bc7008873609c435dd32a32ab1bba&language=pt-BR')
                 ->json(['genres']);
 
             $genres = collect($genresArray)->mapWithKeys(function ($genre){
@@ -191,13 +219,13 @@ class ListController extends Controller
 
                 foreach ($aux as $movie) {
                     $listMovies[] = Http::withToken(config('services.tmdb.token'))
-                        ->get('api.themoviedb.org/3/movie/'.$movie->movie_id.'?api_key=779bc7008873609c435dd32a32ab1bba&language=en-US')
+                        ->get('api.themoviedb.org/3/movie/'.$movie->movie_id.'?api_key=779bc7008873609c435dd32a32ab1bba&language=pt-BR')
                         ->json();
                 }
 
                 // dd($listMovies);        
                 $genresArray = Http::withToken(config('services.tmdb.token'))
-                    ->get('https://api.themoviedb.org/3/genre/movie/list')
+                    ->get('https://api.themoviedb.org/3/genre/movie/list?api_key=779bc7008873609c435dd32a32ab1bba&language=pt-BR')
                     ->json(['genres']);
 
                 $genres = collect($genresArray)->mapWithKeys(function ($genre){

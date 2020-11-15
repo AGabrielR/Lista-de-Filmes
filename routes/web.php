@@ -23,9 +23,13 @@ Route::get('/home', [App\Http\Controllers\ProfileController::class, 'index'])->n
 
 Route::get('/profile/create',[App\Http\Controllers\ProfileController::class, 'create'])->name('profile.create')->middleware('auth');
 
-Route::post('/profile/{id}',[App\Http\Controllers\ProfileController::class, 'accessProfile'])->name('profile.access')->middleware('auth');
+Route::post('/profile/logout',[App\Http\Controllers\ProfileController::class, 'edit'])->name('profile.exit')->middleware('auth');
+
+Route::post('/profile/access/{id}',[App\Http\Controllers\ProfileController::class, 'accessProfile'])->name('profile.access')->middleware('auth');
 
 Route::post('/profile',[App\Http\Controllers\ProfileController::class, 'store'])->name('profile.store')->middleware('auth');
+
+
 
 Route::post('/list/add',[App\Http\Controllers\ListController::class, 'store'])->name('list.store')->middleware('auth');
 

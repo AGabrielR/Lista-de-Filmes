@@ -25,16 +25,12 @@
                     <th>Nome</th>
                     <th></th>
                     <th></th>
-                    <th></th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($profiles as $p)
                     <tr>
                         <td>{{$p->nome}}</td>
-                        <td>
-                            <a href="{{route('profile.edit',$p->id)}}" class="btn btn-warning">Alterar</a>
-                        </td>
                         <td>
                             <form action="{{route('profile.destroy',$p->id)}}" method="post">
                                 @csrf
@@ -56,4 +52,10 @@
                 @endforeach
             </tbody>
         </table>
+        <div class="col-md-3 offset-md-9">
+            <form action="{{route('profile.exit')}}" method="post">
+                @csrf
+                <button type="submit" class="btn btn-outline-danger">Logout</button>
+            </form>
+        </div>
     @endsection

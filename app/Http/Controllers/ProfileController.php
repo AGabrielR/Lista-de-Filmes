@@ -57,6 +57,12 @@ class ProfileController extends Controller
         return redirect()->route('profile.change');
     }
 
+    public function exit()
+    {
+        
+        
+    }
+
     /**
      * Display the specified resource.
      *
@@ -71,7 +77,7 @@ class ProfileController extends Controller
     public function accessProfile(Request $request, $id){
         session()->forget('error');
         // if(Auth::check()){
-
+            
             $request->session()->put('profile_id', $id);
         
             $profile_name = Profile::find($id);
@@ -89,9 +95,20 @@ class ProfileController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit()
     {
-        session()->forget('error');
+        if(session()->has('profile_id')&&session()->has('profile_name')){
+            session()->forget('profile_id');
+            session()->forget('profile_name');
+        }
+        if(session()->has('profile_id')&& !session()->has('profile_name')){
+            session()->forget('profile_id');
+        }
+        if(!session()->has('profile_id')&& session()->has('profile_name')){
+            session()->forget('profile_name');
+        }
+
+        return redirect()->route('profile.change');
     }
 
     /**
@@ -115,8 +132,16 @@ class ProfileController extends Controller
     public function destroy($id)
     {   
         session()->forget('error');
-        if($id==session()->get('profile_id', [1])){
-            session()->put('error', "Erro, acesse por outro perfil para remover");
+        if(session()->has('profile_id')){
+            if($id==session()->get('profile_id', [1])){
+                $profile = Profile::findOrFail ($id);
+                $profile->delete();
+                session()->forget('profile_id');
+                session()->forget('profile_name');
+            }else{
+                $profile = Profile::findOrFail ($id);
+                $profile->delete();
+            }
         }else{
             $profile = Profile::findOrFail ($id);
             $profile->delete();
