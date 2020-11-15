@@ -37,30 +37,37 @@ class ListController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {   
-        $movie_id = $request->only(['movie_id']);
-        
-        $aux = DB::table('movies_lists')
-            ->select(DB::raw('movie_id'))
-            ->where(
-                [
-                    ['profile_id', '=', session()->get('profile_id', [1])], 
-                    ['movie_id', '=', $movie_id],
-                ])
-            ->get();
-        
-        if(!isset($aux)){
+    {  
+        if(null !== (session()->get('profile_id'))){
+            $movie_id = $request->only(['id']);
             
-            $movies_list = $request->only(['movie_id']);
-            $movies_list['profile_id'] = session()->get('profile_id', [1]);
-            $movies_list['watched'] = false;
+            // dd(session()->get('profile_id'));
 
-        moviesList::create($movies_list);
+            $aux = DB::table('movies_lists')
+                ->select(DB::raw('movie_id'))
+                ->where(
+                    [
+                        ['profile_id', '=', session()->get('profile_id')], 
+                        ['movie_id', '=', $movie_id['id']],
+                    ])
+                ->get();
+            
+            
+            if($aux!==[]){
+                
+                $movies_list['movie_id'] = $movie_id['id'];
+                $movies_list['profile_id'] = session()->get('profile_id', [1]);
+                $movies_list['watched'] = false;
+
+            moviesList::create($movies_list);
+            }
+
+            
+
+            return redirect()->route('movies.index');
+        }else{
+            return redirect()->route('profile.change');
         }
-
-        
-
-        return redirect()->route('movies.index');
     }
 
     /**
@@ -71,32 +78,39 @@ class ListController extends Controller
      */
     public function show(Request $request)
     {   
-        $aux = DB::table('movies_lists')
-            ->select(DB::raw('movie_id'))
-            ->where('profile_id', '=', session()->get('profile_id', [1]))
-            ->get();
-        
-        $listMovies = [];
+        if(null !== (session()->get('profile_id'))){
+            $aux = DB::table('movies_lists')
+                ->select(DB::raw('movie_id'))
+                ->where([
+                    ['profile_id', '=', session()->get('profile_id', [1])],
+                    ['watched', '=', false],
+                ])
+                ->get();
+            
+            $listMovies = [];
 
-        foreach ($aux as $movie) {
-            $listMovies[] = Http::withToken(config('services.tmdb.token'))
-                ->get('api.themoviedb.org/3/movie/'.$movie->movie_id.'?api_key=779bc7008873609c435dd32a32ab1bba&language=en-US')
-                ->json();
+            foreach ($aux as $movie) {
+                $listMovies[] = Http::withToken(config('services.tmdb.token'))
+                    ->get('api.themoviedb.org/3/movie/'.$movie->movie_id.'?api_key=779bc7008873609c435dd32a32ab1bba&language=en-US')
+                    ->json();
+            }
+
+            // dd($listMovies);        
+            $genresArray = Http::withToken(config('services.tmdb.token'))
+                ->get('https://api.themoviedb.org/3/genre/movie/list')
+                ->json(['genres']);
+
+            $genres = collect($genresArray)->mapWithKeys(function ($genre){
+                return [$genre['id'] => $genre['name']];
+            });
+
+            return view('list.movies', [
+                'listMovies' => $listMovies,
+                'genres' => $genres,
+            ]);
+        }else{
+            return redirect()->route('profile.change');
         }
-
-        // dd($listMovies);        
-        $genresArray = Http::withToken(config('services.tmdb.token'))
-            ->get('https://api.themoviedb.org/3/genre/movie/list')
-            ->json(['genres']);
-
-        $genres = collect($genresArray)->mapWithKeys(function ($genre){
-            return [$genre['id'] => $genre['name']];
-        });
-
-        return view('list.movies', [
-            'listMovies' => $listMovies,
-            'genres' => $genres,
-        ]);
     }
 
     /**
@@ -105,9 +119,42 @@ class ListController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function watched()
     {
-        //
+        if(null !== (session()->get('profile_id'))){
+            $aux = DB::table('movies_lists')
+            ->select(DB::raw('movie_id'))
+            ->where([
+                ['profile_id', '=', session()->get('profile_id', [1])],
+                ['watched', '=', true],
+            ])
+            ->get();
+            
+            $listMovies = [];
+
+            foreach ($aux as $movie) {
+                $listMovies[] = Http::withToken(config('services.tmdb.token'))
+                    ->get('api.themoviedb.org/3/movie/'.$movie->movie_id.'?api_key=779bc7008873609c435dd32a32ab1bba&language=en-US')
+                    ->json();
+            }
+
+            // dd($listMovies);        
+            $genresArray = Http::withToken(config('services.tmdb.token'))
+                ->get('https://api.themoviedb.org/3/genre/movie/list')
+                ->json(['genres']);
+
+            $genres = collect($genresArray)->mapWithKeys(function ($genre){
+                return [$genre['id'] => $genre['name']];
+            });
+
+            return view('list.watched', [
+                'listMovies' => $listMovies,
+                'genres' => $genres,
+            ]);
+
+        }else{
+            return redirect()->route('profile.change');
+        }
     }
 
     /**
@@ -117,9 +164,53 @@ class ListController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        if(null !== (session()->get('profile_id'))){
+            $movie_id = $request->only(['id']);
+
+                $aux = DB::table('movies_lists')
+                    ->where(
+                        [
+                            ['profile_id', '=', session()->get('profile_id', [1])], 
+                            ['movie_id', '=', $movie_id["id"]],
+                        ])
+                    ->update(['watched' => true]);
+                
+                $aux = null;
+
+                $aux = DB::table('movies_lists')
+                    ->select(DB::raw('movie_id'))
+                    ->where([
+                        ['profile_id', '=', session()->get('profile_id', [1])],
+                        ['watched', '=', true],
+                    ])
+                    ->get();
+
+                $listMovies = [];
+
+                foreach ($aux as $movie) {
+                    $listMovies[] = Http::withToken(config('services.tmdb.token'))
+                        ->get('api.themoviedb.org/3/movie/'.$movie->movie_id.'?api_key=779bc7008873609c435dd32a32ab1bba&language=en-US')
+                        ->json();
+                }
+
+                // dd($listMovies);        
+                $genresArray = Http::withToken(config('services.tmdb.token'))
+                    ->get('https://api.themoviedb.org/3/genre/movie/list')
+                    ->json(['genres']);
+
+                $genres = collect($genresArray)->mapWithKeys(function ($genre){
+                    return [$genre['id'] => $genre['name']];
+                });
+
+                return view('list.watched', [
+                    'listMovies' => $listMovies,
+                    'genres' => $genres,
+                ]);
+            }else{
+            return redirect()->route('profile.change');
+        }
     }
 
     /**

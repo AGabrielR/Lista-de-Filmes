@@ -31,6 +31,10 @@ Route::post('/list/add',[App\Http\Controllers\ListController::class, 'store'])->
 
 Route::get('/list/movies',[App\Http\Controllers\ListController::class, 'show'])->name('list.movies')->middleware('auth');
 
+Route::post('/watched/movies/add',[App\Http\Controllers\ListController::class, 'update'])->name('add.watched')->middleware('auth');
+
+Route::get('/watched/movies/',[App\Http\Controllers\ListController::class, 'watched'])->name('list.watched')->middleware('auth');
+
 Route::get('/profile/edit/{id}',[App\Http\Controllers\ProfileController::class, 'edit'])->name('profile.edit')->middleware('auth');
 
 Route::delete('/profile/destroy/{id}',[App\Http\Controllers\ProfileController::class, 'destroy'])->name('profile.destroy')->middleware('auth');

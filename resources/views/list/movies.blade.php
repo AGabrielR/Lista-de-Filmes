@@ -32,9 +32,9 @@
                                         @endforeach
                                     @endfor
                                 </div>
-                                <form action="{{route('list.store')}}" method="POST">
+                                <form action="{{route('add.watched')}}" method="POST">
                                     @csrf
-                                    <input type="hidden" name="id" value="{{$movie['id']}}">
+                                    <input type="hidden" name="id" value="{{$movie['id']}}" name="movie_id">
                                     <button type="submit" class="btn btn-primary">+ Assistido</button>
                                 </form>
                             </div>

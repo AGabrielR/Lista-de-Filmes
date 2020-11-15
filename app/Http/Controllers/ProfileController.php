@@ -71,6 +71,7 @@ class ProfileController extends Controller
     public function accessProfile(Request $request, $id){
         session()->forget('error');
         // if(Auth::check()){
+
             $request->session()->put('profile_id', $id);
         
             $profile_name = Profile::find($id);

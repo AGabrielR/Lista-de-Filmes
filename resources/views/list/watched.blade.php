@@ -1,16 +1,14 @@
 @extends('layouts.app')
     @section('content')
         <div class="container">
-            @if(!isset($searchResults))
-                <div class="searched-movies">
-                    <h2>Nenhum filme encontrado</h2>
-                </div>
-            @else
-            <div class="searched-movies">
-                <h2 class="uppercase trackindwider text-orange-500 text-lg font-semibold">Filmes Encontrados</h2>
+            <div class="popular-movies">
+                <h2 class="uppercase trackindwider text-orange-500 text-lg font-semibold">Filmes que {{session()->get('profile_name', [1])}} já assistiu:</h2>
                 <br>
+                @if($listMovies === [])
+                    <p>Nenhum filme encontrado, procure por algo para adicionar à lista.</p>
+                @else
                 <div class="row">
-                    @foreach($searchResults as $movie)
+                    @foreach($listMovies as $movie)
                         <div class="col-md-3 mb-4">
                             <a href="#">
                                 <img src="{{'https://image.tmdb.org/t/p/w500/'.$movie['poster_path']}}" alt="" class="offset-md-1 col-md-11 img-fluid">
@@ -23,26 +21,22 @@
                                     </svg>
                                     <span>{{$movie['vote_average'] * 10 .'%'}}</span>
                                     <span>|</span>
-                                    @if(isset($movie['release_date']))
-                                        <span>{{ \Carbon\Carbon::parse($movie['release_date'])->format('d M, y')}}</span>
-                                    @endif
+                                    <span>{{ \Carbon\Carbon::parse($movie['release_date'])->format('d M, y')}}</span>
                                 </div>
                                 <div>
-                                    @foreach($movie['genre_ids'] as $genre)
-                                        {{ $genres->get($genre) }}@if (!$loop->last), @endif
-                                    @endforeach
+                                    @for($i = 0; $i < count($movie['genres']); $i++)
+                                        @foreach($movie['genres'][$i] as $genre)
+                                            @if(!is_numeric($genre))
+                                                {{ $genre }}@if (!$loop->last), @endif
+                                            @endif
+                                        @endforeach
+                                    @endfor
                                 </div>
-                                <form action="{{route('list.store')}}" method="POST">
-                                    @csrf
-                                    <input type="hidden" name="id" value="{{$movie['id']}}">
-                                    <button type="submit" class="btn btn-primary">+ Lista</button>
-                                </form>
                             </div>
                         </div>
                     @endforeach
-        
                 </div>
+                @endif
             </div>
-            @endif
         </div>
     @endsection

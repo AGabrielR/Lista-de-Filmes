@@ -39,7 +39,7 @@
                             <a href="{{route('list.movies')}}">Minha Lista</a>
                         </li>
                         <li class="nav-link">
-                            <a href="">Já assistidos</a>
+                            <a href="{{route('list.watched')}}">Já assistidos</a>
                         </li>
                     </ul>
                 @endguest
