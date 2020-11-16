@@ -30,11 +30,8 @@ class SocialAuthFacebookController extends Controller
             $finduser = User::where('facebook_id', $user->id)->first();
      
             if($finduser){
-                
-                var_dump($finduser["facebook_id"]);
-                dd($finduser->original());
 
-                Auth::login($finduser);
+                Auth::attempt($finduser);
 
                 return redirect('/home');
      
