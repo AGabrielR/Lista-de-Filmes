@@ -37,7 +37,7 @@ return [
     'facebook' => [
         'client_id' => '1248056972246148',
         'client_secret' => '7e1aadecb766f1d8afe72c2ce6930324',
-        'redirect' => env('FACEBOOK_REDIRECT'),
+        'redirect' => 'https://lit-everglades-35003.herokuapp.com/callback',
       ],
 
 ];
