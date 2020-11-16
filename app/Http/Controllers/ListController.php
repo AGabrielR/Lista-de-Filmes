@@ -81,7 +81,7 @@ class ListController extends Controller
                 return redirect()->route('profile.change');
             }
         }else{
-            return redirect()->route('login')
+            return redirect()->route('login');
         }
     }
 
