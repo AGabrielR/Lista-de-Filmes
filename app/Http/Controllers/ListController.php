@@ -69,7 +69,7 @@ class ListController extends Controller
                     ->get();
             }
 
-            if($aux!==[]){
+            if($aux!=[]){
                 if(isset($movie_id['id'])){
                     $movies_list['movie_id'] = $movie_id['id'];
                 }else{
@@ -93,7 +93,7 @@ class ListController extends Controller
             moviesList::create($movies_list);
             }
 
-            return redirect()->route('movies.index');
+            return redirect()->route('list.movies');
         }else{
             return redirect()->route('profile.change');
         }
