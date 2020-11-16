@@ -31,7 +31,8 @@ class SocialAuthFacebookController extends Controller
      
             if($finduser){
                 
-                dd($finduser);
+                var_dump($finduser["facebook_id"]);
+                dd($finduser->original());
 
                 Auth::login($finduser);
 
