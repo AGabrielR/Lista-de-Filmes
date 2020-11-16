@@ -69,7 +69,7 @@ class ListController extends Controller
                     ->get();
             }
 
-            if($aux!=[]){
+            if(!empty($aux)){
                 if(isset($movie_id['id'])){
                     $movies_list['movie_id'] = $movie_id['id'];
                 }else{
