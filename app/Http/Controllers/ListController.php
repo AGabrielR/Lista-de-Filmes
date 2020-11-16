@@ -54,9 +54,6 @@ class ListController extends Controller
                         ['movie_id', '=', $movie_id['id']],
                     ])
                 ->get();
-            
-
-            dd($aux);
 
             if(empty($aux)){
                 
