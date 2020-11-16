@@ -34,9 +34,8 @@ class SocialAuthFacebookController extends Controller
                 ->where('facebook_id', $user->id)
                 ->get();
             
-            dd($finduser);
 
-            if(null !== ($finduser)){
+            if([] !== ($finduser)){
 
                 Auth::login($finduser, 'true');
                 
