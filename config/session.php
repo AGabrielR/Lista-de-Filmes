@@ -155,7 +155,7 @@ return [
     |
     */
 
-    'domain' => 'https://lit-everglades-35003.herokuapp.com/',
+    'domain' =>env('SESSION_DOMAIN', 'https://lit-everglades-35003.herokuapp.com/'),
 
     /*
     |--------------------------------------------------------------------------
