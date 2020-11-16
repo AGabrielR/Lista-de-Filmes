@@ -35,7 +35,7 @@ class SocialAuthFacebookController extends Controller
                 ->get();
             
             var_dump($finduser);
-            dd([]!=($finduser));
+            dd(empty($finduser));
 
             if([] !== ($finduser)){
 
