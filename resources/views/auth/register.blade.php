@@ -62,6 +62,16 @@
                                 <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
                             </div>
                         </div>
+                        <!-- Data de Nascimento -->
+                        <div class="form-group row">
+                            <label for="birth-date" class="col-md-4 col-form-label text-md-right">{{ __('Data de Nascimento') }}</label>
+                            <?php
+                                date_default_timezone_set('America/Manaus')
+                            ?>
+                            <div class="col-md-6">
+                                <input id="birth-date" type="date" class="form-control" name="date_birth" required max="{{date('Y-m-d')}}">
+                            </div>
+                        </div>
                         <!-- Botão -->
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">

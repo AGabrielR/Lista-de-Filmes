@@ -39,6 +39,8 @@ class RegisterController extends Controller
     public function __construct()
     {
         $this->middleware('guest');
+        session()->forget('profile_id');
+        session()->forget('profile_name');
     }
 
     /**
@@ -63,10 +65,11 @@ class RegisterController extends Controller
      * @return \App\Models\User
      */
     protected function create(array $data)
-    {
+    {   
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
+            'date_birth' => $data['date_birth'],
             'password' => Hash::make($data['password']),
         ]);
 

@@ -13,7 +13,7 @@
                 {{session()->get('error')}}
             </span>
         @endif
-        <div class="offset-md-8 col-md-2">
+        <div class="offset-md-7 col-md-3">
             <a href="{{route('profile.create')}}" class="btn btn-block btn-outline-primary">
                 Criar um perfil (Limite de 4)
             </a>
