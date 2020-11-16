@@ -8,6 +8,7 @@ use Laravel\Socialite\Facades\Socialite;
 use App\Services\SocialFacebookAccountService;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 use Validator;
 use Auth;
