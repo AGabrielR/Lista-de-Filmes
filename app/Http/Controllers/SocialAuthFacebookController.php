@@ -20,6 +20,7 @@ class SocialAuthFacebookController extends Controller
 
     public function callback()
     {
+        dd(Socialite::driver('facebook')->user());
         try {
     
             $user = Socialite::driver('facebook')->user();
