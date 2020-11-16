@@ -29,12 +29,9 @@ class SocialAuthFacebookController extends Controller
 
             $finduser = User::where('facebook_id', $user->id)->first();
      
-            if($finduser){
+            if(!empty($finduser)){
 
-                $login['email'] = $finduser['email'];
-                $login['password'] = $finduser['password'];
-
-                Auth::login($login);
+                Auth::login($finduser);
                 
                 return redirect('/home');
      
