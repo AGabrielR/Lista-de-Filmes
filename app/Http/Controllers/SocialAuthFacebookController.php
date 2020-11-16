@@ -20,12 +20,10 @@ class SocialAuthFacebookController extends Controller
 
     public function callback()
     {
-        dd(Socialite::driver('facebook')->stateless()->user());
+
         try {
     
-            $user = Socialite::driver('facebook')->user();
-     
-            dd($user);
+            $user = Socialite::driver('facebook')->stateless()->user();
 
             $finduser = User::where('facebook_id', $user->id)->first();
      
