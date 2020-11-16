@@ -45,7 +45,7 @@ class SocialAuthFacebookController extends Controller
                     'password' => encrypt('123456dummy')
                 ]);
     
-                Auth::login($newUser);
+                Auth::login($newUser, 'true');
      
                 return redirect('/home');
             }
