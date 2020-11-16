@@ -68,7 +68,7 @@ class ListController extends Controller
                         ])
                     ->get();
             }
-            dd($aux);
+            var_dump($aux);
             if($aux!==[]){
                 if(isset($movie_id['id'])){
                     $movies_list['movie_id'] = $movie_id['id'];
