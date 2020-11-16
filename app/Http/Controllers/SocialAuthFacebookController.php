@@ -18,12 +18,14 @@ class SocialAuthFacebookController extends Controller
         return Socialite::driver('facebook')->redirect();
     }
 
-    public function callback(SocialFacebookAccountService $service)
+    public function callback()
     {
         try {
     
             $user = Socialite::driver('facebook')->user();
      
+            dd($user);
+
             $finduser = User::where('facebook_id', $user->id)->first();
      
             if($finduser){
