@@ -41,46 +41,31 @@ class ListController extends Controller
     {  
         if(null !== (session()->get('profile_id'))){
             if([] !== $request->only(['id'])){
-                $movie_id = $request->only(['id']);
+                $movie_id['id'] = $request->only(['id']);
             }else{
-                $movie_id = $request->only(['movie_id']);
+                $movie_id['id'] = $request->only(['movie_id']);
             }
-           
-            // dd($movie_id['movie_id']);
             
-            // dd(session()->get('profile_id'));
-            if(isset($movie_id['movie_id'])){
-                $aux = DB::table('movies_lists')
-                    ->select(DB::raw('movie_id'))
-                    ->where(
-                        [
-                            ['profile_id', '=', session()->get('profile_id', [1])], 
-                            ['movie_id', '=', $movie_id['movie_id']],
-                        ])
-                    ->get();
-            }else{
-                $aux = DB::table('movies_lists')
-                    ->select(DB::raw('movie_id'))
-                    ->where(
-                        [
-                            ['profile_id', '=', session()->get('profile_id', [1])], 
-                            ['movie_id', '=', $movie_id['id']],
-                        ])
-                    ->get();
-            }
+            $aux = DB::table('movies_lists')
+                ->select(DB::raw('movie_id'))
+                ->where(
+                    [
+                        ['profile_id', '=', session()->get('profile_id')], 
+                        ['movie_id', '=', $movie_id['id']],
+                    ])
+                ->get();
+            
+
+            dd($aux);
 
             if(empty($aux)){
-                if(isset($movie_id['id'])){
-                    $movies_list['movie_id'] = $movie_id['id'];
-                }else{
-                    $movies_list['movie_id'] = $movie_id['movie_id'];
-                }
                 
+                $movies_list['movie_id'] = $movie_id['id'];
                 $movies_list['profile_id'] = session()->get('profile_id', [1]);
                 $movies_list['watched'] = false;
                 
                 $genresArray = Http::withToken(config('services.tmdb.token'))
-                ->get('api.themoviedb.org/3/movie/'.$movies_list['movie_id'].'?api_key=779bc7008873609c435dd32a32ab1bba&language=en-US')
+                ->get('api.themoviedb.org/3/movie/'.$movies_list['movie_id'].'?api_key=779bc7008873609c435dd32a32ab1bba&language=pt-BR')
                 ->json('genres');
 
                 foreach ($genresArray as $genre) {
@@ -90,7 +75,7 @@ class ListController extends Controller
                     moviesCat::create($movies_cat);
                 }
 
-            moviesList::create($movies_list);
+                moviesList::create($movies_list);
             }
 
             return redirect()->route('list.movies');
