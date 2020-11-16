@@ -54,7 +54,7 @@ class ListController extends Controller
                     ->select(DB::raw('movie_id'))
                     ->where(
                         [
-                            ['profile_id', '=', session()->get('profile_id')], 
+                            ['profile_id', '=', session()->get('profile_id', [1])], 
                             ['movie_id', '=', $movie_id['movie_id']],
                         ])
                     ->get();
@@ -63,12 +63,12 @@ class ListController extends Controller
                     ->select(DB::raw('movie_id'))
                     ->where(
                         [
-                            ['profile_id', '=', session()->get('profile_id')], 
+                            ['profile_id', '=', session()->get('profile_id', [1])], 
                             ['movie_id', '=', $movie_id['id']],
                         ])
                     ->get();
             }
-            var_dump($aux);
+
             if($aux!==[]){
                 if(isset($movie_id['id'])){
                     $movies_list['movie_id'] = $movie_id['id'];
