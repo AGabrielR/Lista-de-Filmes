@@ -31,9 +31,10 @@ class SocialAuthFacebookController extends Controller
      
             if($finduser){
      
-                Auth::login($finduser);
-    
-                return redirect('/');
+                var_dump(Auth::login($finduser));
+                dd(Auth::attempt($finduser));
+
+                return redirect('/home');
      
             }else{
                 $newUser = User::create([
@@ -45,7 +46,7 @@ class SocialAuthFacebookController extends Controller
     
                 Auth::login($newUser);
      
-                return redirect('/');
+                return redirect('/home');
             }
     
         } catch (Exception $e) {
