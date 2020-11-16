@@ -48,15 +48,10 @@ class LoginController extends Controller
             $finduser = User::where('facebook_id', $user->id)->first();
 
             if(isset($finduser)){
-                while(!Auth::check()){
-                    Auth::login($finduser);
-                }
+
+                Auth::login($finduser);
                 
-                if (Auth::check()) {
-                    // The user is logged in...
-                    return redirect('/home');
-                }
-                
+                return redirect('/home');
      
             }else{
                 $newUser = User::create([
@@ -66,14 +61,9 @@ class LoginController extends Controller
                     'password' => encrypt('123456dummy')
                 ]);
     
-                while(!Auth::check()){
-                    Auth::login($newUser, 'true');
-                }
-                
-                if (Auth::check()) {
-                    // The user is logged in...
-                    return redirect('/home');
-                }
+                Auth::login($newUser, 'true');
+     
+                return redirect('/home');
             }
     
         } catch (Exception $e) {
