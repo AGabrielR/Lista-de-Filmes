@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/redirect', [App\Http\Controllers\SocialAuthFacebookController::class, 'redirect'])->name('facebook.redirect');
+Route::get('/redirect', [App\Http\Controllers\SocialAuthFacebookController::class, 'redirectToProvider'])->name('facebook.redirect');
 
 Route::get('/callback', [App\Http\Controllers\SocialAuthFacebookController::class, 'callback'])->name('facebook.callback');
 
