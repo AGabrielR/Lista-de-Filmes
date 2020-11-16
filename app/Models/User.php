@@ -43,6 +43,7 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+
     public function addNew($input)
     {
         $check = static::where('facebook_id',$input['facebook_id'])->first();

@@ -35,9 +35,9 @@ class SocialAuthFacebookController extends Controller
                 ->get();
             
 
-            if(!empty($finduser)){
+            if(isset($finduser)){
 
-                Auth::login($finduser);
+                Auth::login($finduser, 'true');
                 
                 return redirect('/home');
      
