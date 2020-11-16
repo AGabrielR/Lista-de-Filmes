@@ -58,7 +58,7 @@ class MoviesController extends Controller
     public function find(Request $search){
 
         $searchResults = Http::withToken(config('services.tmdb.token'))
-            ->get('https://api.themoviedb.org/3/search/movie?api_key={eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3NzliYzcwMDg4NzM2MDljNDM1ZGQzMmEzMmFiMWJiYSIsInN1YiI6IjVmYWQ3MjgwZGExMGYwMDA0MGQ1MmFmNCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.ZzCx7Wny6o6HM0VvWZWcP3vpCAhL999bY-_eTZH96zs}&language=pt-BR&query='.$search['search'])
+            ->get('https://api.themoviedb.org/3/search/movie?api_key=779bc7008873609c435dd32a32ab1bba&language=pt-BR&query='.$search['search'])
             ->json(['results']);
         
             $genresArray = Http::withToken(config('services.tmdb.token'))
