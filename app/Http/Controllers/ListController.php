@@ -39,45 +39,49 @@ class ListController extends Controller
      */
     public function store(Request $request)
     {  
-        if(null !== (session()->get('profile_id'))){
-            if([] !== $request->only(['id'])){
-                $movie_id['id'] = $request->only(['id']);
-            }else{
-                $movie_id['id'] = $request->only(['movie_id']);
-            }
-            
-            $aux = DB::table('movies_lists')
-                ->select(DB::raw('movie_id'))
-                ->where(
-                    [
-                        ['profile_id', '=', session()->get('profile_id')], 
-                        ['movie_id', '=', $movie_id['id']],
-                    ])
-                ->get();
-
-            if(empty($aux)){
+        if(Auth::check()){
+            if(null !== (session()->get('profile_id'))){
+                if([] !== $request->only(['id'])){
+                    $movie_id['id'] = $request->only(['id']);
+                }else{
+                    $movie_id['id'] = $request->only(['movie_id']);
+                }
                 
-                $movies_list['movie_id'] = $movie_id['id'];
-                $movies_list['profile_id'] = session()->get('profile_id', [1]);
-                $movies_list['watched'] = false;
-                
-                $genresArray = Http::withToken(config('services.tmdb.token'))
-                ->get('api.themoviedb.org/3/movie/'.$movies_list['movie_id'].'?api_key=779bc7008873609c435dd32a32ab1bba&language=pt-BR')
-                ->json('genres');
+                $aux = DB::table('movies_lists')
+                    ->select(DB::raw('movie_id'))
+                    ->where(
+                        [
+                            ['profile_id', '=', session()->get('profile_id')], 
+                            ['movie_id', '=', $movie_id['id']],
+                        ])
+                    ->get();
 
-                foreach ($genresArray as $genre) {
-                    $movies_cat['cat_id'] = $genre['id'];
-                    $movies_cat['profile_id'] = session()->get('profile_id', [1]);
+                if(empty($aux)){
+                    
+                    $movies_list['movie_id'] = $movie_id['id'];
+                    $movies_list['profile_id'] = session()->get('profile_id', [1]);
+                    $movies_list['watched'] = false;
+                    
+                    $genresArray = Http::withToken(config('services.tmdb.token'))
+                    ->get('api.themoviedb.org/3/movie/'.$movies_list['movie_id'].'?api_key=779bc7008873609c435dd32a32ab1bba&language=pt-BR')
+                    ->json('genres');
 
-                    moviesCat::create($movies_cat);
+                    foreach ($genresArray as $genre) {
+                        $movies_cat['cat_id'] = $genre['id'];
+                        $movies_cat['profile_id'] = session()->get('profile_id', [1]);
+
+                        moviesCat::create($movies_cat);
+                    }
+
+                    moviesList::create($movies_list);
                 }
 
-                moviesList::create($movies_list);
+                return redirect()->route('list.movies');
+            }else{
+                return redirect()->route('profile.change');
             }
-
-            return redirect()->route('list.movies');
         }else{
-            return redirect()->route('profile.change');
+            return redirect()->route('login')
         }
     }
 
