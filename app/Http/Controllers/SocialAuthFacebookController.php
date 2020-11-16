@@ -29,7 +29,11 @@ class SocialAuthFacebookController extends Controller
 
             var_dump($user->id);
 
-            $finduser = User::where('facebook_id', $user->id)->first();
+            //$finduser = User::where('facebook_id', $user->id)->first();
+
+            $finduser = DB::table('User')
+                ->where('facebook_id', $user->id)
+                ->get();
             
             dd($finduser);
 
