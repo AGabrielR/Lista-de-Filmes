@@ -33,10 +33,10 @@ return [
     'tmdb' => [
         'token' => env('TMDB_TOKEN'),
     ],
-    
+
     'facebook' => [
-        'client_id' => env('FACEBOOK_APP_ID'),
-        'client_secret' => env('FACEBOOK_APP_SECRET'),
+        'client_id' => '1248056972246148',
+        'client_secret' => '7e1aadecb766f1d8afe72c2ce6930324',
         'redirect' => env('FACEBOOK_REDIRECT'),
       ],
 
