@@ -13,6 +13,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/redirect', [App\Http\Controllers\SocialAuthFacebookController::class, 'redirect'])->name('facebook.redirect');
+
+Route::get('/callback', [App\Http\Controllers\SocialAuthFacebookController::class, 'callback'])->name('facebook.callback');
+
 Route::get('/', [App\Http\Controllers\MoviesController::class, 'index'])->name('movies.index');
 
 Route::post('/movies', [App\Http\Controllers\MoviesController::class, 'find'])->name('movies.find');
