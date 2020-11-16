@@ -31,8 +31,11 @@ class SocialAuthFacebookController extends Controller
      
             if($finduser){
 
-                Auth::attempt($finduser);
+                $login['email'] = $finduser['email'];
+                $login['password'] = $finduser['password'];
 
+                Auth::login($login);
+                
                 return redirect('/home');
      
             }else{
