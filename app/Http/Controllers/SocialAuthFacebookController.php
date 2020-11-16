@@ -28,11 +28,11 @@ class SocialAuthFacebookController extends Controller
     
             $user = Socialite::driver('facebook')->stateless()->user();
 
-            //$finduser = User::where('facebook_id', $user->id)->first();
+            $finduser = User::where('facebook_id', $user->id)->first();
 
-            $finduser = DB::table('users')
-                ->where('facebook_id', $user->id)
-                ->get();
+            // $finduser = DB::table('users')
+            //     ->where('facebook_id', $user->id)
+            //     ->get();
             
             var_dump($finduser);
             dd(empty($finduser));
