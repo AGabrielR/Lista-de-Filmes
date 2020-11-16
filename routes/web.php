@@ -13,9 +13,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/redirect', [App\Http\Controllers\Auth\LoginController::class, 'redirectToProvider'])->name('facebook.redirect');
+Route::get('/redirect', [App\Http\Controllers\SocialAuthFacebookController::class, 'redirectToProvider'])->name('facebook.redirect');
 
-Route::get('/callback', [App\Http\Controllers\Auth\LoginController::class, 'callback'])->name('facebook.callback');
+Route::get('/callback', [App\Http\Controllers\SocialAuthFacebookController::class, 'callback'])->name('facebook.callback');
 
 Route::get('/', [App\Http\Controllers\MoviesController::class, 'index'])->name('movies.index');
 
